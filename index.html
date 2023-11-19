@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execute JavaScript Code</title>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    // Listen for JavaScript code from the server
+    socket.on('executeCode', (jsCode) => {
+        // Execute the received JavaScript code
+        try {
+            eval(jsCode); // Use with caution
+        } catch (error) {
+            console.error('Error executing code:', error);
+        }
+    });
+</script>
+<h1>Hello</h1>
+</body>
+</html>
