@@ -16,7 +16,10 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('A user connected');
-    io.socketsJoin("yeet");
+    socket.on("joinroom", (room) => {
+        socket.join(room)
+    })
+    // io.socketsJoin("y    eet");
     // Send JavaScript code to the client
 
     // socket.emit('executeCode', jsCode);
