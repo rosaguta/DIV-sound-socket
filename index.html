@@ -5,21 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Execute JavaScript Code</title>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-<script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
+    function funny() {
+        console.log("a");
 
-    // Listen for JavaScript code from the server
-    socket.on('executeCode', (jsCode) => {
-        // Execute the received JavaScript code
-        try {
-            eval(jsCode); // Use with caution
-        } catch (error) {
-            console.error('Error executing code:', error);
-        }
-    });
+        // Listen for JavaScript code from the server
+        const url = 'http://138.201.52.251:9998/4/big bottom.mp3';
+        socket.emit('wiebel', url);
+
+        socket.on('executeCode', (jsCode) => {
+            // Execute the received JavaScript code
+            try {
+                console.log(jsCode)
+                eval(jsCode); // Use with caution
+            } catch (error) {
+                console.error('Error executing code:', error);
+            }
+        });
+
+    }
 </script>
+
+<button onclick="funny()">laksdgdk</button>
 </body>
 </html>

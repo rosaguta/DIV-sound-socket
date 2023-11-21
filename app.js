@@ -4,7 +4,11 @@ const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+    cors:{
+      origin: "*"
+        }
+    });
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -12,13 +16,14 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('A user connected');
-
+    io.socketsJoin("yeet");
     // Send JavaScript code to the client
-    const jsCode = `
-    var audio = new Audio('http://138.201.52.251:9998/4/kkrdoffo.mp3');
-    audio.play();
-  `;
-    socket.emit('executeCode', jsCode);
+
+    // socket.emit('executeCode', jsCode);
+    socket.on("wiebel", (url) => {
+        const jscode = `var audio = new Audio('`+url+`'); audio.play(); var audio = null;`;
+        socket.to('yeet').emit('executeCode', jscode)
+    })
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');
