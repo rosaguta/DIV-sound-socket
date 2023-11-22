@@ -10,9 +10,6 @@ const io = socketIo(server, {
         }
     });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
 
 io.on('connection', (socket) => {
     console.log('A user connected');
@@ -23,11 +20,14 @@ io.on('connection', (socket) => {
     // Send JavaScript code to the client
 
     // socket.emit('executeCode', jsCode);
-    socket.on("wiebel", (url) => {
+    socket.on("wiebel", (url, room) => {
         const jscode = `new Audio('`+url+`').play();`;
 
         console.log("a button was pressed")
-        io.to('yeet').emit('executeCode', url)
+        console.log("url:", url)
+        console.log("room:", room)
+        console.log("code:", jscode)
+        io.to(room).emit('executeCode', jscode)
     })
 
     socket.on('disconnect', () => {
