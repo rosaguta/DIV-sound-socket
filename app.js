@@ -17,15 +17,17 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('A user connected');
     socket.on("joinroom", (room) => {
+        console.log("a user connected to "+room)
         socket.join(room)
     })
-    // io.socketsJoin("y    eet");
     // Send JavaScript code to the client
 
     // socket.emit('executeCode', jsCode);
     socket.on("wiebel", (url) => {
-        const jscode = `var audio = new Audio('`+url+`'); audio.play(); var audio = null;`;
-        socket.to('yeet').emit('executeCode', jscode)
+        const jscode = `new Audio('`+url+`').play();`;
+
+        console.log("a button was pressed")
+        io.to('yeet').emit('executeCode', url)
     })
 
     socket.on('disconnect', () => {
