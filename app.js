@@ -9,7 +9,7 @@ const io = socketIo(server, {
         origin: "*"
     }
 });
-connectedUsers = []
+connectedUsers = {}
 
 io.on('connection', (socket) => {
     // console.log('A user connected');
@@ -17,13 +17,24 @@ io.on('connection', (socket) => {
         console.log(user + " connected to " + room)
         connectedUsers[room] = connectedUsers[room] || [];
         connectedUsers[room].push(user);
-        console.log("Room: "+room+ "\n" +"Userlist:" +connectedUsers[room])
-        io.to(room).emit("userjoined", connectedUsers[room] + "\n");
-
+        console.log("Room: "+room+ "\n" +"Userlist:" +connectedUsers[room]+ "\n")
         socket.join(room);
     })
+    socket.on("getuserlist", (room) =>{
+        console.log("pushing list to " + room)
+        console.log("the list in question:" + connectedUsers[room])
+        io.to(room).emit("userjoined", connectedUsers[room]);
+    })
     // Send JavaScript code to the client
-
+    socket.on("disconnect", (room, user) => {
+        if (connectedUsers[room]) {
+            var index = connectedUsers[room].indexOf(user)
+            if (index !== -1) {
+                connectedUsers[room].splice(index, 1)
+                console.log(user + " Removed from " + room)
+            }
+        }
+    });
     // socket.emit('executeCode', jsCode);
     socket.on("wiebel", (url, room) => {
         // const jscode = `new Audio('`+url+`').play();`;
