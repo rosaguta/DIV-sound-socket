@@ -23,15 +23,18 @@ io.on('connection', (socket) => {
     socket.on("getuserlist", (room) =>{
         console.log("pushing list to " + room)
         console.log("the list in question:" + connectedUsers[room])
-        io.to(room).emit("userjoined", connectedUsers[room]);
+        io.to(room).emit("userlist", connectedUsers[room]);
     })
     // Send JavaScript code to the client
-    socket.on("disconnect", (room, user) => {
+    socket.on("userdisconnect", (room, user) => {
+        console.log("retrieved user: "+user)
         if (connectedUsers[room]) {
             var index = connectedUsers[room].indexOf(user)
             if (index !== -1) {
                 connectedUsers[room].splice(index, 1)
                 console.log(user + " Removed from " + room)
+                console.log("new list: "+connectedUsers[room])
+                io.to(room).emit("userlist",connectedUsers[room])
             }
         }
     });
@@ -46,9 +49,9 @@ io.on('connection', (socket) => {
         io.to(room).emit('executeCode', url)
     })
 
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
+    // socket.on('disconnect', () => {
+    //     console.log('event disconnect');
+    // });
 });
 
 const PORT = process.env.PORT || 4000;
